@@ -1,7 +1,7 @@
 name: New Service
 description: Create a new service with IssueOps
-title: "<enter-service-name-here>"
-labels: ["new-service"]
+itle: "[New Service]: "
+labels: new-service
 body:
   - type: textarea
     attributes:
@@ -35,8 +35,8 @@ body:
       label: Enable issues
       description: Whether to enable issues on the repo or not
       options:
-        - '- [X] Yes, I want to enable Issues'
-        - '- [ ] Yes, I want to enable Issues'
+        - yes
+        - no
     validations:
       required: true
   - type: dropdown
@@ -44,7 +44,19 @@ body:
       label: Enable projects
       description: Whether to enable projects on the repo or not
       options:
-        - ' - [X] Yes, I want to enable Projects'
-        - ' - [ ] Yes, I want to enable Projects'
+        - yes
+        - no
     validations:
       required: true
+  - type: dropdown
+    attributes:
+      label: Extra features
+      description: What else do you want
+      multiple: true
+      options:
+        - new repo
+        - new pr
+        - new issue
+    validations:
+      required: true
+
