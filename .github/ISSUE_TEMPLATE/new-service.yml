@@ -1,0 +1,50 @@
+name: New Service
+description: Create a new service with IssueOps
+title: "<enter-service-name-here>"
+labels: ["new-service"]
+body:
+  - type: textarea
+    attributes:
+      label: Repo name
+      description: Enter in the name of the new repository
+      placeholder: <enter-repo-name-here>
+    validations:
+      required: true
+  - type: dropdown
+    attributes:
+      label: Repo visibility
+      description: Please select the visibility for the new repository
+      options:
+        - private
+        - internal
+        - public
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Team Write Permissions
+      description: Enter in the name of the team with write access
+      placeholder: dev-team
+  - type: textarea
+    attributes:
+      label: Team Admin Permissions
+      description: Enter in the name of the team with admin access
+      placeholder: admin-team
+  - type: dropdown
+    attributes:
+      label: Enable issues
+      description: Whether to enable issues on the repo or not
+      options:
+        - '- [X] Yes, I want to enable Issues'
+        - '- [ ] Yes, I want to enable Issues'
+    validations:
+      required: true
+  - type: dropdown
+    attributes:
+      label: Enable projects
+      description: Whether to enable projects on the repo or not
+      options:
+        - ' - [X] Yes, I want to enable Projects'
+        - ' - [ ] Yes, I want to enable Projects'
+    validations:
+      required: true
