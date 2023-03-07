@@ -1,0 +1,92 @@
+name: New Service
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  Create-Repo:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'issue_comment' &&
+      (startsWith(github.event.comment.body, '/create-service') &&
+      contains(github.event.issue.labels.*.name, 'new-service'))
+
+    steps:
+    - name: Dump GitHub context
+      env:
+        GITHUB_CONTEXT: ${{ toJSON(github) }}
+      run: echo "$GITHUB_CONTEXT"
+
+    - uses: stefanbuck/github-issue-parser@v3.0.1
+      id: issue-parser
+
+    - name: create repo
+      env: 
+        GH_TOKEN: ${{secrets.ADMIN_TOKEN}}
+      run: |  
+        echo "repo name = ${{ steps.issue-parser.outputs.issueparser_repo_name }}"
+        echo "repo visibility = ${{ steps.issue-parser.outputs.issueparser_repo_visibility }}"
+        echo "team write permissions = ${{ steps.issue-parser.outputs.issueparser_team_write_permissions }}"
+        echo "team admin permissions = ${{ steps.issue-parser.outputs.issueparser_team_admin_permissions }}"
+        echo "enable issues = ${{ steps.issue-parser.outputs.issueparser_enable_issues }}"
+        echo "enable projects = ${{ steps.issue-parser.outputs.issueparser_enable_projects }}"
+        echo "extra features = ${{ steps.issue-parser.outputs.issueparser_extra_features }}"
+
+        if [ "$${{ steps.issue-parser.outputs.issueparser_enable_projects }}" = "yes" ]; then has_projects=true; fi
+        if [ "$${{ steps.issue-parser.outputs.issueparser_enable_issues }}" = "yes" ]; then has_issues=true; fi
+        
+        gh api \
+          --method POST \
+          -H "Accept: application/vnd.github+json" \
+          /orgs/${{ github.REPOSITORY_OWNER }}/repos \
+          -f name='${{ steps.issue-parser.outputs.issueparser_repo_name }}' \
+          -F visibility=${{ steps.issue-parser.outputs.issueparser_repo_visibility }} \
+          -F has_issues=${has_issues} \
+          -F has_projects=${has_projects}
+                
+        echo "adding write team: $team ..."
+        # if ! gh api --method PUT /orgs/${{ github.REPOSITORY_OWNER }}/teams/${{ steps.issue-parser.outputs.issueparser_team_write_permissions }}/repos/${{ github.REPOSITORY_OWNER }}/${{ steps.issue-parser.outputs.issueparser_repo_name }} -f permission='push' ; then echo "" && error=1 && echo "::notice::write team ${{ steps.issue-parser.outputs.issueparser_team_write_permissions }} wasn't added to ${{ steps.issue-parser.outputs.issueparser_repo_name }}" ; fi
+        
+        echo "adding admin team: $team ..."
+        # if ! gh api --method PUT /orgs/${{ github.REPOSITORY_OWNER }}/teams/${{ steps.issue-parser.outputs.issueparser_team_admin_permissions }}/repos/${{ github.REPOSITORY_OWNER }}/${{ steps.issue-parser.outputs.issueparser_repo_name }} -f permission='admin' ; then echo "" && error=1 && echo "::notice::admin team ${{ steps.issue-parser.outputs.issueparser_team_admin_permissions }} wasn't added to ${{ steps.issue-parser.outputs.issueparser_repo_name }}" ; fi
+        
+        # extra features - replace ", " with ","
+        extra_features=${${{ steps.issue-parser.outputs.issueparser_extra_features }}//, /,}
+        echo $extra_features
+
+    - name: Add created label
+      if: ${{ success() }}
+      env: 
+        GH_TOKEN: ${{ github.token }}
+      run: gh issue edit ${{ github.event.issue.number }} --add-label created -R ${{ github.repository }}
+
+    - name: Post successful message
+      uses: actions/github-script@v6
+      if: ${{ success() }}
+      with:
+        script: |
+          let commentBody
+          commentBody = `🚀 New repo created successfully
+
+          Visit the following link for the repo: [https://github.com/${{ github.repository_owner }}/${{ steps.issue-parser.outputs.issueparser_repo_name }}](https://github.com/${{ github.repository_owner }}/${{ steps.issue-parser.outputs.issueparser_repo_name }})
+          `
+
+          await github.rest.issues.createComment({
+            issue_number: ${{ github.event.issue.number }},
+            owner: '${{ github.REPOSITORY_OWNER }}',
+            repo: '${{ github.event.repository.name }}',
+            body: commentBody.replace(/  +/g, '')
+          })
+
+    - name: Post failure message
+      if: ${{ failure() }}
+      uses: actions/github-script@v6
+      with:
+        script: |
+          let commentBody
+          commentBody = `😢 The new repo could not be created. Please review the [action logs](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) for more information.`
+          await github.rest.issues.createComment({
+            issue_number: ${{ github.event.issue.number }},
+            owner: '${{ github.REPOSITORY_OWNER }}',
+            repo: '${{ github.event.repository.name }}',
+            body: commentBody.replace(/  +/g, '')
+          })
