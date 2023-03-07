@@ -35,8 +35,8 @@ body:
       label: Enable issues
       description: Whether to enable issues on the repo or not
       options:
-        - yes
-        - no
+        - "yes"
+        - "no"
     validations:
       required: true
   - type: dropdown
@@ -44,8 +44,8 @@ body:
       label: Enable projects
       description: Whether to enable projects on the repo or not
       options:
-        - yes
-        - no
+        - "yes"
+        - "no"
     validations:
       required: true
   - type: dropdown
