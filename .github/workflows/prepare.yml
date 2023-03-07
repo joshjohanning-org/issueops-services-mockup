@@ -23,6 +23,8 @@ jobs:
 
       - uses: stefanbuck/github-issue-parser@v3.0.1
         id: issue-parser
+        with:
+          template-path: .github/ISSUE_TEMPLATE/new-service.yml
 
       - name: Post prepare message
         uses: actions/github-script@v6
