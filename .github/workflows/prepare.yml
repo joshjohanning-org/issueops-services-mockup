@@ -37,8 +37,10 @@ jobs:
             - The **repo visibility** is set to be: **\`${{ steps.issue-parser.outputs.issueparser_repo_visibility }}\`**
             - The **team write permissions** is set to be: **\`${{ steps.issue-parser.outputs.issueparser_team_write_permissions }}\`**
             - The **team admin permissions** is set to be: **\`${{ steps.issue-parser.outputs.issueparser_team_admin_permissions }}\`**
-            - Enable Issues?: **\`${{ steps.issue-parser.outputs.issueparser_yes_i_want_to_enable_issues }}\`**
-            - Enable Projects?: **\`${{ steps.issue-parser.outputs.issueparser_yes_i_want_to_enable_projects }}\`**
+            - Enable Issues?: **\`${{ steps.issue-parser.outputs.issueparser_enable_issues }}\`**
+            - Enable Projects?: **\`${{ steps.issue-parser.outputs.issueparser_enable_projects }}\`**
+            - Extra features?: **\`${{ steps.issue-parser.outputs.issueparser_extra_features }}\`**
+            
             ## Create the repo
             Add the following comment to this issue in order to create the repo:
           
