@@ -11,6 +11,9 @@ jobs:
       (startsWith(github.event.comment.body, '/create-service') &&
       contains(github.event.issue.labels.*.name, 'new-service'))
 
+    env:
+      created-label: service-created
+      
     steps:
     - name: Dump GitHub context
       env:
@@ -59,7 +62,7 @@ jobs:
       if: ${{ success() }}
       env: 
         GH_TOKEN: ${{ github.token }}
-      run: gh issue edit ${{ github.event.issue.number }} --add-label created -R ${{ github.repository }}
+      run: gh issue edit ${{ github.event.issue.number }} --add-label ${{ env.created-label }} -R ${{ github.repository }}
 
     - name: Post successful message
       uses: actions/github-script@v6
