@@ -43,7 +43,7 @@ jobs:
             Add the following comment to this issue in order to create the repo:
           
             \`\`\`
-            /create-repo
+            /create-service
             \`\`\`
             `
             await github.rest.issues.createComment({
