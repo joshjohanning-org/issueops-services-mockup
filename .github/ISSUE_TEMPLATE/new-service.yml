@@ -44,7 +44,7 @@ body:
       label: Enable projects
       description: Whether to enable projects on the repo or not
       options:
-        - label: Yes
+        - label: "yes"
           required: true
   - type: dropdown
     attributes:
