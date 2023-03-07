@@ -50,7 +50,8 @@ jobs:
         # if ! gh api --method PUT /orgs/${{ github.REPOSITORY_OWNER }}/teams/${{ steps.issue-parser.outputs.issueparser_team_admin_permissions }}/repos/${{ github.REPOSITORY_OWNER }}/${{ steps.issue-parser.outputs.issueparser_repo_name }} -f permission='admin' ; then echo "" && error=1 && echo "::notice::admin team ${{ steps.issue-parser.outputs.issueparser_team_admin_permissions }} wasn't added to ${{ steps.issue-parser.outputs.issueparser_repo_name }}" ; fi
         
         # extra features - replace ", " with ","
-        extra_features=${${{ steps.issue-parser.outputs.issueparser_extra_features }}//, /,}
+        extra_features=${{ steps.issue-parser.outputs.issueparser_extra_features }}
+        extra_features=${extra_features//, /,}
         echo $extra_features
 
     - name: Add created label
