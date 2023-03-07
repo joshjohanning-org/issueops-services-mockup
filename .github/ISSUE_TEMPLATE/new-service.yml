@@ -39,15 +39,13 @@ body:
         - "no"
     validations:
       required: true
-  - type: dropdown
+  - type: checkboxes
     attributes:
       label: Enable projects
       description: Whether to enable projects on the repo or not
       options:
-        - "yes"
-        - "no"
-    validations:
-      required: true
+        - label: Yes
+          required: true
   - type: dropdown
     attributes:
       label: Extra features
@@ -59,4 +57,3 @@ body:
         - new issue
     validations:
       required: true
-
