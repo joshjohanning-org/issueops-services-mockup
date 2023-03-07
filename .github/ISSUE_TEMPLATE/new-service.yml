@@ -1,6 +1,6 @@
 name: New Service
 description: Create a new service with IssueOps
-itle: "[New Service]: "
+title: "[New Service]: "
 labels: new-service
 body:
   - type: textarea
