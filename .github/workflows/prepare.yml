@@ -29,7 +29,6 @@ jobs:
         with:
           script: |
             let commentBody
-            var enableProjects = ${{ steps.issue-parser.outputs.issueparser_enable_projects }} || no;
             commentBody = `👋 Thank you for opening this new repo issue, @${{ github.actor }}.
             The following has been parsed from your issue body:
             - The **repo name** is set to be: **\`${{ steps.issue-parser.outputs.issueparser_repo_name }}\`**
@@ -37,7 +36,7 @@ jobs:
             - The **team write permissions** is set to be: **\`${{ steps.issue-parser.outputs.issueparser_team_write_permissions }}\`**
             - The **team admin permissions** is set to be: **\`${{ steps.issue-parser.outputs.issueparser_team_admin_permissions }}\`**
             - Enable Issues?: **\`${{ steps.issue-parser.outputs.issueparser_enable_issues }}\`**
-            - Enable Projects?: **\`${enableProjects}\`**
+            - Enable Projects?: **\`${{ steps.issue-parser.outputs.issueparser_enable_projects }}\`**
             - Extra features?: **\`${{ steps.issue-parser.outputs.issueparser_extra_features }}\`**
             
             ## Create the repo
